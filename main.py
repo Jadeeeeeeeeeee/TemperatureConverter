@@ -50,7 +50,7 @@ class Converter:
     self.temp_entry.grid(row=2, padx=10, pady=10)
 
     error = "Please enter a number"
-    self.temp_error = Label(self.temp_frame, text="",
+    self.temp_error = Label(self.temp_frame, text=" ",
                            fg="#9C0000")
     self.temp_error.grid(row=3)
 
