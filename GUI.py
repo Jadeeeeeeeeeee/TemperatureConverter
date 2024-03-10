@@ -2,7 +2,44 @@ from tkinter import *
 
 class Converter:
 
-   def __init__(self):
+  def check_temp(self, min_value):
+
+      has_error = "no"
+      error = "Please enter a number that is more than {}".format(min_value)
+
+      #check that user has entered a valid number...
+      try:
+        response = self.temp_entry.get()
+        response = float(response)
+
+        if response < min_value:
+          has_error = "yes"
+
+      except ValueError:
+        has_error = "yes"
+
+      #if the number is invalid, display error message
+      if has_error == "yes":
+        self.temp_error.config(text=error, fg="#9C0000")
+
+      else:
+        self.temp_error.config(text="You are OK", fg="blue")
+
+      #if we have atleast one valid calcutions,
+      #enable history / export button
+      self.to_history_button.config(state=NORMAL)
+
+  def to_celsius(self):
+      self.check_temp(-459)
+
+  def __init__(self):
+
+    #Initialise variables (such as feedback variable)
+    self.var_feedback =StringVar()
+    self.var_feedback.set("")
+
+    self.var_has_error = StringVar()
+    self.var_has_error.set("no")
 
     #common format for all buttons
     #Arial size 14 bold, with white text
@@ -31,7 +68,7 @@ class Converter:
     self.temp_entry.grid(row=2, padx=10, pady=10)
 
     error = "Please enter a number"
-    self.temp_error = Label(self.temp_frame, text=error,
+    self.temp_error = Label(self.temp_frame, text="",
                            fg="#9C0000")
     self.temp_error.grid(row=3)
 
@@ -39,12 +76,13 @@ class Converter:
     self.button_frame = Frame(self.temp_frame)
     self.button_frame.grid(row=4)
 
-    self.to_celcius_button = Button(self.button_frame,
-                                   text="To Celcius",
+    self.to_celsius_button = Button(self.button_frame,
+                                   text="To Celsius",
                                    bg="#990099",
                                    fg=button_fg, width=12,
-                                   font=button_font)
-    self.to_celcius_button.grid(row=0, column=0, padx=5, pady=5)
+                                   font=button_font,
+                                   command=self.to_celsius)
+    self.to_celsius_button.grid(row=0, column=0, padx=5, pady=5)
 
     self.to_farenheit_button = Button(self.button_frame,
                                    text="To Farenheit",
@@ -63,7 +101,7 @@ class Converter:
     self.to_farenheit_button.grid(row=0, column=1)
 
     self.to_history_button = Button(self.button_frame,
-                                   text="Help / Export",
+                                   text="History / Export",
                                    bg="#004C99",
                                    fg=button_fg,
                                    font=button_font, width=12,
@@ -71,9 +109,8 @@ class Converter:
     self.to_history_button.grid(row=1, column=1, padx=5, pady=5)
 
 
-
 if __name__ == "__main__":  
   root = Tk()
   root.title("Temperature Converter")
-  Converter()
+  converter = Converter()
   root.mainloop()
