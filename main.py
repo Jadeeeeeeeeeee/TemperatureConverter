@@ -8,8 +8,9 @@ class Converter:
       error = "Please enter a number that is more than {}".format(min_value)
 
       #check that user has entered a valid number...
+      response = self.temp_entry.get()
+    
       try:
-        response = self.temp_entry.get()
         response = float(response)
 
         if response < min_value:
@@ -18,19 +19,46 @@ class Converter:
       except ValueError:
         has_error = "yes"
 
-      #if the number is invalid, display error message
+      #set var_has_error so that entry box and
+      #labels can be correctly formatted by formatting function
       if has_error == "yes":
-        self.temp_error.config(text=error, fg="#9C0000")
-
+        self.var_has_error.set("yes")
+        self.var_feedback.set(error)
+        return "invalid"
+      #if we have no errors:
       else:
-        self.temp_error.config(text="You are OK", fg="blue")
-
-      #if we have atleast one valid calcutions,
-      #enable history / export button
+        #set to 'no' in case of previous errors
+        self.var_has_error.set("no")
+        #return number to be
+        #converted and enable history
         self.to_history_button.config(state=NORMAL)
+        return response
+
 
   def to_celsius(self):
-      self.check_temp(-459)
+    to_convert = self.check_temp(-459)
+
+    if to_convert != "invalid":
+      #do calculation
+      self.var_feedback.set("Converting {} to "
+                           "C :".format(to_convert))
+
+    self.output_asnwer()
+
+
+  def output_asnwer(self):
+    output = self.var_feedback.get()
+    has_errors = self.var_has_error.get()
+
+    if has_errors == "yes":
+      #red text, pink entry box
+      self.temp_error.config(fg="#9C0000")
+      self.temp_entry.config(bg="#F8CECC")
+    else:
+      self.temp_error.config(fg="#004C00")
+      self.temp_entry.config(bg="#FFFFFF")
+
+    self.temp_error.config(text=output)
 
   def __init__(self):
 
