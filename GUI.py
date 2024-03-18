@@ -8,7 +8,6 @@ class Converter:
       error = "Please enter a number that is more than {}".format(min_value)
 
       #check that user has entered a valid number...
-
       response = self.temp_entry.get()
 
       try:
@@ -18,39 +17,58 @@ class Converter:
           has_error = "yes"
 
       except ValueError:
-        has_error = "yes"  
+        has_error = "yes"
 
-      #Sets var_has_error so that entry box and
-      #labels can be correctly formatted by formatting function 
+      #set var_has_error so that entry box and
+      #labels can be correctly formatted by formatting function
       if has_error == "yes":
         self.var_has_error.set("yes")
         self.var_feedback.set(error)
         return "invalid"
-
+      #if we have no errors:
       else:
-          #set to 'no' in case of previous errors 
-          self.var_has_error.set("no")
-
-          #return number to be
-          #converted  and enable history button
-          self.to_history_button.config(state=NORMAL)
-          return response
+        #set to 'no' in case of previous errors
+        self.var_has_error.set("no")
+        #return number to be
+        #converted and enable history
+        self.to_history_button.config(state=NORMAL)
+        return response
 
 
   def to_celsius(self):
-      self.check_temp(-459)
+    to_convert = self.check_temp(-459)
+
+    if to_convert != "invalid":
+      #do calculation
+      self.var_feedback.set("Converting {} to "
+                           "C :".format(to_convert))
+
+    self.output_asnwer()
+  #check temperature is more than -273 and convert it 
+  def to_farenheit(self):
+    to_convert = self.check_temp(-273)
+
+    if to_convert != "invalid":
+      #do calculation
+      self.var_feedback.set("Converting {} to "
+                           "F :".format(to_convert))
+
+    self.output_asnwer()
 
 
-  #Shows user output and clears entry widget
-  #ready  for next calculaiton
-  def output_answer(self):
+  def output_asnwer(self):
     output = self.var_feedback.get()
-    has_error = self.var_has_error.get()
+    has_errors = self.var_has_error.get()
 
-    if has_error == "yes":
+    if has_errors == "yes":
       #red text, pink entry box
-      self.temp_error.config(fg="#9C0000")
+      self.output_label.config(fg="#9C0000")
+      self.temp_entry.config(bg="#F8CECC")
+    else:
+      self.output_label.config(fg="#004C00")
+      self.temp_entry.config(bg="#FFFFFF")
 
+    self.output_label.config(text=output)
 
   def __init__(self):
 
@@ -88,9 +106,9 @@ class Converter:
     self.temp_entry.grid(row=2, padx=10, pady=10)
 
     error = "Please enter a number"
-    self.temp_error = Label(self.temp_frame, text="",
+    self.output_label = Label(self.temp_frame, text="",
                            fg="#9C0000")
-    self.temp_error.grid(row=3)
+    self.output_label.grid(row=3)
 
     #Conversion, help and history / export buttons
     self.button_frame = Frame(self.temp_frame)
@@ -108,7 +126,8 @@ class Converter:
                                    text="To Farenheit",
                                    bg="#009900",
                                    fg=button_fg, width=12,
-                                   font=button_font)
+                                   font=button_font,
+                                   command=self.to_farenheit)
     self.to_farenheit_button.grid(row=0, column=1, padx=5, pady=5)
 
     self.to_help_button = Button(self.button_frame,
