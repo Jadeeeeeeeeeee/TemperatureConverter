@@ -2,6 +2,7 @@ from tkinter import *
 
 class Converter:
 
+
   def check_temp(self, min_value):
 
       has_error = "no"
@@ -34,26 +35,40 @@ class Converter:
         self.to_history_button.config(state=NORMAL)
         return response
 
+  @staticmethod
+  def round_ans(val):
+    var_rounded = (val * 2 + 1) // 2
+    return "{:.0f}".format(var_rounded)
+  
+  #check temperature is valid and convdert it
+  def temp_convert(self, min_val):
+    to_convert = self.check_temp(min_val)
+    deg_sign = u'\N{DEGREE SIGN}'
+    set_feedback = "yes"
+    to_convert = float(to_convert)
+    answer = ""
+    from_to = ""
 
-  def to_celsius(self):
-    to_convert = self.check_temp(-459)
+    if to_convert == "invalid":
+      set_feedback = "no"
 
-    if to_convert != "invalid":
-      #do calculation
-      self.var_feedback.set("Converting {} to "
-                           "C :".format(to_convert))
+    #Convert to Celcius
+    elif min_val == -459:
+      
+      answer = (to_convert - 32) * 5/9
+      from_to = "{} F{} is {} C{}"
 
-    self.output_asnwer()
-  #check temperature is more than -273 and convert it 
-  def to_farenheit(self):
-    to_convert = self.check_temp(-273)
+    else:
+      answer = to_convert * 1.8 + 32
+      from_to = "{} C{} is {} F{}"
 
-    if to_convert != "invalid":
-      #do calculation
-      self.var_feedback.set("Converting {} to "
-                           "F :".format(to_convert))
+    if set_feedback == "yes":
+      to_convert = self.round_ans(to_convert)
+      answer = self.round_ans(answer)
 
-    self.output_asnwer()
+      #create user output and add to calculation history 
+      feedback = from_to.format(to_convert, deg_sign,
+                               answer, deg_sign)
 
 
   def output_asnwer(self):
@@ -119,7 +134,7 @@ class Converter:
                                    bg="#990099",
                                    fg=button_fg, width=12,
                                    font=button_font,
-                                   command=self.to_celsius)
+                                   command=lambda: self.temp_convert(-459))
     self.to_celsius_button.grid(row=0, column=0, padx=5, pady=5)
 
     self.to_farenheit_button = Button(self.button_frame,
@@ -127,7 +142,7 @@ class Converter:
                                    bg="#009900",
                                    fg=button_fg, width=12,
                                    font=button_font,
-                                   command=self.to_farenheit)
+                                      command=lambda: self.temp_convert(-273))
     self.to_farenheit_button.grid(row=0, column=1, padx=5, pady=5)
 
     self.to_help_button = Button(self.button_frame,
