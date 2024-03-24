@@ -1,4 +1,5 @@
 from tkinter import *
+from functools import partial # To prevent unwanted windows
 
 class Converter:
 
@@ -24,16 +25,27 @@ class Converter:
                                    font=button_font, command=self.to_help)
     self.to_help_button.grid(row=1, column=0, padx=5, pady=5)
 
-  @staticmethod
-  def to_help():
-    DisplayHelp()
+  
+  def to_help(self):
+    DisplayHelp(self)
 
 class DisplayHelp:
-  def __init__(self):
+
+
+  def __init__(self, partner):
+    #setup dialogue box and backround colour
     backround = "#FFE6CC"
 
     self.help_box = Toplevel()
+    
+    #disable help button
+    partner.to_help_button.config(state=DISABLED)
 
+    #If users press cross at top, closses help and
+    #'releases' help button
+    self.help_box.protocol('WM_DELETE_WINDOW',
+                           partial(self.close_help, partner))
+    
     self.help_frame = Frame(self.help_box, width=300, height=200,
                            bg=backround)
     self.help_frame.grid()
