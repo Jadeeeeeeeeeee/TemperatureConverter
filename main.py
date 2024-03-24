@@ -6,7 +6,7 @@ class Converter:
 
     #common format for all buttons
     #Arial size 14 bold, with white text
-    button_font = ("Arial", "12", "bold")
+    button_font = ("Arial 12 bold")
     button_fg = "#FFFFFF"
 
     # Set up the GUI Frame
@@ -58,12 +58,12 @@ class DisplayHelp:
 
     self.help_text_label = Label(self.help_frame, bg=backround,
                                 text=help_text, wraplength=350, justify="left")
-                
-                
-                                   
 
-    
+    self.help_text_label.grid(row=1, padx=10)
 
+    self.dismiss_button = Button(self.help_frame, font=("Arial 12 bold"), 
+                                text="Dismiss", bg="#CC6000", fg="#FFFFFF") 
+    self.dismiss_button.grid(row=2, padx=10, pady=10)
 
 
 if __name__ == "__main__":  
