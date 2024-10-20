@@ -29,7 +29,7 @@ class Converter:
             self.to_history_button.config(state=NORMAL)
             return response
 
-    @staticmethod
+    @staticmethod 
     def round_ans(val):
         var_rounded = (val * 2 + 1) // 2
         return "{:.0f}".format(var_rounded)
